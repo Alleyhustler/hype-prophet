@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYPE PROPHET</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000 url('PATH/TO/YOUR/BACKGROUND.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 0;
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            opacity: 0.05;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px);
+            z-index: 1;
+        }
+
+        .top-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #8b5cf6, transparent);
+            opacity: 0.5;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 5;
+        }
+
+        header {
+            display: flex;
+            font-family: "Bowlby One", sans-serif;
+            align-items: center;
+            justify-content: space-between;
+            padding: 32px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-box {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('s.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .logo-text p {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .twitter-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .twitter-link:hover {
+            color: #fff;
+        }
+
+        .connect-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .connect-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            padding: 48px 0;
+        }
+
+        .prediction-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .prediction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .prediction-meta {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .prediction-title {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .prediction-desc {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .countdown {
+            text-align: right;
+        }
+
+        .countdown-label {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .countdown-time {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .sentiment-bar {
+            margin-bottom: 32px;
+        }
+
+        .sentiment-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .bar-track {
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, #22c55e, #4ade80);
+            transition: width 1s ease;
+        }
+
+        .sentiment-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .green { color: #4ade80; }
+        .red { color: #ef4444; }
+
+        .vote-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .vote-btn {
+            flex: 1;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vote-btn:not(:disabled):hover {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        .vote-btn.no:not(:disabled):hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .vote-btn.voted-yes {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #4ade80;
+        }
+
+        .vote-btn.voted-no {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .vote-btn.inactive {
+            background: rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.05);
+            color: #333;
+        }
+
+        .vote-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .connect-msg {
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            margin-top: 16px;
+        }
+
+        .archive-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            padding: 24px;
+        }
+
+        .archive-title {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .archive-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.2s;
+        }
+
+        .archive-item:last-child {
+            border-bottom: none;
+        }
+
+        .archive-item:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .archive-left {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .archive-id {
+            font-size: 10px;
+            color: #333;
+            width: 48px;
+        }
+
+        .archive-meta {
+            font-size: 14px;
+            width: 128px;
+        }
+
+        .archive-date {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .archive-right {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .archive-voters {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .archive-roi {
+            font-size: 14px;
+            width: 80px;
+            text-align: right;
+        }
+
+        .archive-result {
+            font-size: 10px;
+            width: 64px;
+            text-align: right;
+        }
+
+        .rank-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .rank-title {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .rank-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .rank-wallet {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .rank-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .rank-stat {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .rank-label {
+            color: #666;
+        }
+
+        .oracle-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.5);
+            padding: 24px;
+        }
+
+        .oracle-title {
+            font-size: 10px;
+            color: #4ade80;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .oracle-title::before {
+            content: '○ ';
+        }
+
+        .oracle-logs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 10px;
+            color: #333;
+        }
+
+        .oracle-log {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .wallet-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .wallet-modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .wallet-modal-title {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #fff;
+        }
+
+        .wallet-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .wallet-option {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .wallet-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .wallet-option img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .wallet-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .wallet-option.disabled:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .close-modal {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="top-line"></div>
+
+    <!-- Wallet Connection Modal -->
+    <div class="wallet-modal hidden" id="walletModal">
+        <div class="wallet-modal-content">
+            <h2 class="wallet-modal-title">CONNECT WALLET</h2>
+            <div class="wallet-options">
+                <button class="wallet-option" id="phantomOption">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIyQzE3LjUyMjggMjIgMjIgMTcuNTIyOCAyMiAxMkMyMiA2LjQ3NzE1IDE3LjUyMjggMiAxMiAyQzYuNDc3MTUgMiAyIDYuNDc3MTUgMiAxMkMyIDE3LjUyMjggNi40NzcxNSAyMiAxMiAyMloiIGZpbGw9IiM0QTVBRkYiLz4KPHBhdGggZD0iTTEyLjYxMjUgMTEuNDM3NVYxNC4xMjVIMTQuMzc1VjE2LjI1SDkuNjI1VjE0LjEyNUgxMS4zNzVWMTEuNDM3NUg5LjYyNVY5LjMxMjVIMTQuMzc1VjExLjQzNzVIMTIuNjEyNVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Phantom">
+                    Phantom
+                </button>
+                <button class="wallet-option" id="solflareOption">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIyQzE3LjUyMjggMjIgMjIgMTcuNTIyOCAyMiAxMkMyMiA2LjQ3NzE1IDE3LjUyMjggMiAxMiAyQzYuNDc3MTUgMiAyIDYuNDc3MTUgMiAxMkMyIDE3LjUyMjggNi40NzcxNSAyMiAxMiAyMloiIGZpbGw9IiMxNjgxRjUiLz4KPHBhdGggZD0iTTE1LjI1IDkuNzVIOEM3LjU4NTc5IDkuNzUgNy4yNSAxMC4wODU4IDcuMjUgMTAuNVYxMy41QzcuMjUgMTMuOTE0MiA3LjU4NTc5IDE0LjI1IDggMTQuMjVIMTEuMjVDMTEuNjY0MiAxNC4yNSAxMiAxMy45MTQyIDEyIDEzLjVWMTIuNzVDMTIgMTIuMzM1OCAxMi4zMzU4IDEyIDEyLjc1IDEySDE2QzE2LjQxNDIgMTIgMTYuNzUgMTEuNjY0MiAxNi43NSAxMS4yNVYxMC41QzE2Ljc1IDEwLjA4NTggMTYuNDE0MiA5Ljc1IDE2IDkuNzVIMTUuMjVaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" alt="Solflare">
+                    Solflare
+                </button>
+            </div>
+            <button class="close-modal" id="closeModal">CANCEL</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo-area">
+                <div class="logo-box"></div>
+                <div class="logo-text">
+                    <h1>HYPE PROPHET</h1>
+                    <p>on-chain prediction oracle</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="https://x.com/HypeProphet" target="_blank" class="twitter-link">𝕏</a>
+                <button class="connect-btn" id="connectBtn">CONNECT</button>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <div class="main-col">
+                <div class="prediction-card">
+                    <div class="prediction-header">
+                        <div>
+                            <div class="prediction-meta">PREDICTION #231</div>
+                            <h2 class="prediction-title">DOGS</h2>
+                            <p class="prediction-desc">Next meta cycle dominated by dog-themed tokens</p>
+                        </div>
+                        <div class="countdown">
+                            <div class="countdown-label">CLOSES IN</div>
+                            <div class="countdown-time" id="countdown">00:00:00</div>
+                        </div>
+                    </div>
+
+                    <div class="sentiment-bar">
+                        <div class="sentiment-header">
+                            <span>MARKET SENTIMENT</span>
+                            <span id="totalVotes">4,176 VOTES</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" id="barFill" style="width: 68%"></div>
+                        </div>
+                        <div class="sentiment-values">
+                            <span class="green" id="yesPercent">68% BELIEVE</span>
+                            <span class="red" id="noPercent">32% DENY</span>
+                        </div>
+                    </div>
+
+                    <div class="vote-buttons">
+                        <button class="vote-btn" id="yesBtn" disabled>BELIEVE</button>
+                        <button class="vote-btn no" id="noBtn" disabled>DENY</button>
+                    </div>
+
+                    <p class="connect-msg" id="connectMsg">connect wallet to cast belief</p>
+                </div>
+
+                <div class="archive-card">
+                    <div class="archive-title">Prophecy Archive</div>
+                    <div id="archiveList">
+                        <div class="archive-item">
+                            <div class="archive-left">
+                                <span class="archive-id">#230</span>
+                                <span class="archive-meta">AI AGENTS</span>
+                                <span class="archive-date">11.03</span>
+                            </div>
+                            <div class="archive-right">
+                                <span class="archive-voters">3,421</span>
+                                <span class="archive-roi green">+187%</span>
+                                <span class="archive-result green">✓ TRUE</span>
+                            </div>
+                        </div>
+                        <div class="archive-item">
+                            <div class="archive-left">
+                                <span class="archive-id">#229</span>
+                                <span class="archive-meta">MEME SZN</span>
+                                <span class="archive-date">11.02</span>
+                            </div>
+                            <div class="archive-right">
+                                <span class="archive-voters">2,891</span>
+                                <span class="archive-roi green">+243%</span>
+                                <span class="archive-result green">✓ TRUE</span>
+                            </div>
+                        </div>
+                        <div class="archive-item">
+                            <div class="archive-left">
+                                <span class="archive-id">#228</span>
+                                <span class="archive-meta">UTILITY</span>
+                                <span class="archive-date">11.01</span>
+                            </div>
+                            <div class="archive-right">
+                                <span class="archive-voters">4,102</span>
+                                <span class="archive-roi red">-12%</span>
+                                <span class="archive-result" style="color: #333">✗ FALSE</span>
+                            </div>
+                        </div>
+                        <div class="archive-item">
+                            <div class="archive-left">
+                                <span class="archive-id">#227</span>
+                                <span class="archive-meta">NFT PUMP</span>
+                                <span class="archive-date">10.31</span>
+                            </div>
+                            <div class="archive-right">
+                                <span class="archive-voters">1,834</span>
+                                <span class="archive-roi red">-8%</span>
+                                <span class="archive-result" style="color: #333">✗ FALSE</span>
+                            </div>
+                        </div>
+                        <div class="archive-item">
+                            <div class="archive-left">
+                                <span class="archive-id">#226</span>
+                                <span class="archive-meta">GAMING</span>
+                                <span class="archive-date">10.30</span>
+                            </div>
+                            <div class="archive-right">
+                                <span class="archive-voters">2,567</span>
+                                <span class="archive-roi green">+156%</span>
+                                <span class="archive-result green">✓ TRUE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-col">
+                <div class="rank-card hidden" id="rankCard">
+                    <div class="rank-title">Your Rank</div>
+                    <div class="rank-level" id="rankLevel">ACOLYTE</div>
+                    <div class="rank-wallet" id="rankWallet">-</div>
+                    <div class="rank-stats">
+                        <div class="rank-stat">
+                            <span class="rank-label">Accuracy</span>
+                            <span class="green" id="rankAccuracy">67%</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Correct</span>
+                            <span id="rankCorrect">12/18</span>
+                        </div>
+                        <div class="rank-stat">
+                            <span class="rank-label">Streak</span>
+                            <span style="color: #a78bfa" id="rankStreak">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="oracle-card">
+                    <div class="oracle-title">ORACLE SCANNING</div>
+                    <div class="oracle-logs" id="oracleLogs"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js';
+        script.onload = initializeApp;
+        document.head.appendChild(script);
+
+        function initializeApp() {
+            const isPhantomAvailable = window.solana && window.solana.isPhantom;
+            const isSolflareAvailable = window.solflare && window.solflare.isSolflare;
+
+            const logMessages = [
+                "scanning dexscreener trending",
+                "twitter engagement spike detected: +340%",
+                "whale accumulation phase confirmed",
+                "social volume breakout imminent",
+                "on-chain activity: 67% probability",
+                "pattern match: previous dog cycle correlation 0.89"
+            ];
+
+            let connected = false;
+            let userVote = null;
+            let votes = { yes: 2847, no: 1329 };
+            const predictionId = 231;
+            const endTime = Date.now() + 14 * 60 * 60 * 1000 + 23 * 60 * 1000;
+
+            const savedVote = localStorage.getItem('hypeProphetVote');
+            if (savedVote) {
+                const data = JSON.parse(savedVote);
+                if (data.predictionId === predictionId) {
+                    userVote = data.vote;
+                }
+            }
+
+            const savedRank = localStorage.getItem('hypeProphetRank');
+            let userRank = savedRank ? JSON.parse(savedRank) : { level: 'ACOLYTE', correct: 12, total: 18, streak: 3 };
+
+            // Check for saved connection ONLY - don't auto-restore
+            const savedConnection = localStorage.getItem('hypeProphetConnection');
+            if (savedConnection) {
+                const connectionData = JSON.parse(savedConnection);
+                // Only restore if explicitly connected in this session
+                if (connectionData.connected && connectionData.walletAddress && sessionStorage.getItem('walletConnected')) {
+                    connectWalletUI(connectionData.walletAddress, connectionData.walletType);
+                }
+            }
+
+            function updateCountdown() {
+                const now = Date.now();
+                const diff = endTime - now;
+                
+                if (diff <= 0) {
+                    document.getElementById('countdown').textContent = '00:00:00';
+                } else {
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    document.getElementById('countdown').textContent = 
+                        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            function addOracleLog() {
+                const logsDiv = document.getElementById('oracleLogs');
+                const log = document.createElement('div');
+                log.className = 'oracle-log';
+                log.textContent = '> ' + logMessages[Math.floor(Math.random() * logMessages.length)];
+                logsDiv.appendChild(log);
+                
+                const logs = logsDiv.querySelectorAll('.oracle-log');
+                if (logs.length > 6) {
+                    logs[0].remove();
+                }
+            }
+
+            addOracleLog();
+            setInterval(addOracleLog, 7000);
+
+            function updateVoteDisplay() {
+                const total = votes.yes + votes.no;
+                const yesPercent = Math.round((votes.yes / total) * 100);
+                const noPercent = 100 - yesPercent;
+
+                document.getElementById('totalVotes').textContent = total.toLocaleString() + ' VOTES';
+                document.getElementById('yesPercent').textContent = yesPercent + '% BELIEVE';
+                document.getElementById('noPercent').textContent = noPercent + '% DENY';
+                document.getElementById('barFill').style.width = yesPercent + '%';
+            }
+
+            updateVoteDisplay();
+
+            function showWalletModal() {
+                document.getElementById('walletModal').classList.remove('hidden');
+                document.getElementById('phantomOption').classList.toggle('disabled', !isPhantomAvailable);
+                document.getElementById('solflareOption').classList.toggle('disabled', !isSolflareAvailable);
+            }
+
+            function hideWalletModal() {
+                document.getElementById('walletModal').classList.add('hidden');
+            }
+
+            async function connectPhantom() {
+                if (!isPhantomAvailable) {
+                    alert('Phantom wallet not found. Please install Phantom from https://phantom.app/');
+                    return;
+                }
+
+                try {
+                    const response = await window.solana.connect();
+                    const publicKey = response.publicKey.toString();
+                    
+                    localStorage.setItem('hypeProphetConnection', JSON.stringify({
+                        connected: true,
+                        walletAddress: publicKey,
+                        walletType: 'phantom'
+                    }));
+                    sessionStorage.setItem('walletConnected', 'true');
+                    
+                    connectWalletUI(publicKey, 'phantom');
+                    hideWalletModal();
+                    
+                    console.log('Connected to Phantom with address:', publicKey);
+                } catch (err) {
+                    console.error('Failed to connect to Phantom:', err);
+                    alert('Failed to connect to Phantom wallet. Please try again.');
+                }
+            }
+
+            async function connectSolflare() {
+                if (!isSolflareAvailable) {
+                    alert('Solflare wallet not found. Please install Solflare from https://solflare.com/');
+                    return;
+                }
+
+                try {
+                    await window.solflare.connect();
+                    const publicKey = window.solflare.publicKey.toString();
+                    
+                    localStorage.setItem('hypeProphetConnection', JSON.stringify({
+                        connected: true,
+                        walletAddress: publicKey,
+                        walletType: 'solflare'
+                    }));
+                    sessionStorage.setItem('walletConnected', 'true');
+                    
+                    connectWalletUI(publicKey, 'solflare');
+                    hideWalletModal();
+                    
+                    console.log('Connected to Solflare with address:', publicKey);
+                } catch (err) {
+                    console.error('Failed to connect to Solflare:', err);
+                    alert('Failed to connect to Solflare wallet. Please try again.');
+                }
+            }
+
+            function connectWalletUI(address, walletType) {
+                const shortAddress = address.substring(0, 4) + '...' + address.substring(address.length - 4);
+                document.getElementById('connectBtn').textContent = shortAddress;
+                document.getElementById('rankWallet').textContent = shortAddress;
+                document.getElementById('rankCard').classList.remove('hidden');
+                document.getElementById('connectMsg').classList.add('hidden');
+                document.getElementById('yesBtn').disabled = false;
+                document.getElementById('noBtn').disabled = false;
+                connected = true;
+
+                const accuracy = Math.round((userRank.correct / userRank.total) * 100);
+                document.getElementById('rankLevel').textContent = userRank.level;
+                document.getElementById('rankAccuracy').textContent = accuracy + '%';
+                document.getElementById('rankCorrect').textContent = userRank.correct + '/' + userRank.total;
+                document.getElementById('rankStreak').textContent = userRank.streak;
+
+                if (userVote) {
+                    updateVoteButtons();
+                }
+            }
+
+            function disconnectWallet() {
+                localStorage.removeItem('hypeProphetConnection');
+                sessionStorage.removeItem('walletConnected');
+                document.getElementById('connectBtn').textContent = 'CONNECT';
+                document.getElementById('rankCard').classList.add('hidden');
+                document.getElementById('connectMsg').classList.remove('hidden');
+                document.getElementById('yesBtn').disabled = true;
+                document.getElementById('noBtn').disabled = true;
+                connected = false;
+                
+                const yesBtn = document.getElementById('yesBtn');
+                const noBtn = document.getElementById('noBtn');
+                yesBtn.classList.remove('voted-yes', 'inactive');
+                noBtn.classList.remove('voted-no', 'inactive');
+            }
+
+            document.getElementById('connectBtn').addEventListener('click', () => {
+                if (!connected) {
+                    showWalletModal();
+                } else {
+                    disconnectWallet();
+                }
+            });
+
+            document.getElementById('phantomOption').addEventListener('click', connectPhantom);
+            document.getElementById('solflareOption').addEventListener('click', connectSolflare);
+            document.getElementById('closeModal').addEventListener('click', hideWalletModal);
+
+            function updateVoteButtons() {
+                const yesBtn = document.getElementById('yesBtn');
+                const noBtn = document.getElementById('noBtn');
+
+                yesBtn.classList.remove('voted-yes', 'inactive');
+                noBtn.classList.remove('voted-no', 'inactive');
+
+                if (userVote === 'yes') {
+                    yesBtn.classList.add('voted-yes');
+                    noBtn.classList.add('inactive');
+                    yesBtn.disabled = true;
+                    noBtn.disabled = true;
+                } else if (userVote === 'no') {
+                    noBtn.classList.add('voted-no');
+                    yesBtn.classList.add('inactive');
+                    yesBtn.disabled = true;
+                    noBtn.disabled = true;
+                }
+            }
+
+            document.getElementById('yesBtn').addEventListener('click', () => {
+                if (connected && !userVote) {
+                    userVote = 'yes';
+                    votes.yes++;
+                    localStorage.setItem('hypeProphetVote', JSON.stringify({ predictionId, vote: 'yes' }));
+                    userRank.total++;
+                    localStorage.setItem('hypeProphetRank', JSON.stringify(userRank));
+                    updateVoteDisplay();
+                    updateVoteButtons();
+                }
+            });
+
+            document.getElementById('noBtn').addEventListener('click', () => {
+                if (connected && !userVote) {
+                    userVote = 'no';
+                    votes.no++;
+                    localStorage.setItem('hypeProphetVote', JSON.stringify({ predictionId, vote: 'no' }));
+                    userRank.total++;
+                    localStorage.setItem('hypeProphetRank', JSON.stringify(userRank));
+                    updateVoteDisplay();
+                    updateVoteButtons();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
